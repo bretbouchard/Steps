@@ -9,10 +9,39 @@
     font-style: normal;
 }*/
 
+
+.nes-container {
+  padding: 20px;
+  margin: 10px 15px;
+}
+
+
+.bpm-control {
+  margin: 20px 0;
+}
+
+.bpm-control label {
+  font-family: 'Press Start 2P', sans-serif;
+  margin-right: 10px;
+}
+
+#bpm-slider {
+  width: 200px;
+}
+
+.step-count {
+  margin: 10px 0;
+}
+
+.step-count label {
+  font-family: 'Press Start 2P', sans-serif;
+  margin-right: 5px;
+}
+
 .trackWrapper {
-  margin-bottom: 20px;
+  margin-bottom: 2px;
   border: 2px solid #333;          /* Optional: to visualize the track borders */
-  padding: 10px;
+  padding: 15px;
 }
 
 .track {
@@ -22,9 +51,9 @@
 }
 
 .samples {
-  flex: 2;                         /* Makes samples take equal space within .track */
+  flex: 4;                         /* Makes samples take equal space within .track */
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;             /* Center the content vertically */
   margin-right: 20px;              /* Optional: Add space between sections */
 }
@@ -32,10 +61,10 @@
 .knobs {
   flex: 1;                         /* Knobs will take twice as much space as the samples */
   display: flex;
-  justify-content: space-around;   /* Distribute knobs evenly */
+  justify-content: space-between;   /* Distribute knobs evenly */
   align-items: center;             /* Center knobs vertically */
+  padding-right: 20px;
 }
-
 
 .knob-wrapper {
     position: relative;
@@ -45,8 +74,9 @@
 .knob-wrapper label{
 /*  display: none;*/
   position: absolute;
-  top: -25px;
-  left: 12px;
+  top: -23px;
+  left: 18px;
+  color: darkgrey;
   }
 
 .knob-wrapper {
@@ -55,19 +85,24 @@
 }
 
 .sequencer {
-  flex: 8;                         /* Sequencer will take more space */
-  display: flex;
-  justify-content: space-around;   /* Distribute the buttons evenly */
-  align-items: center;             /* Center sequencer buttons vertically */
+  flex: 16;                        
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); /* Dynamic columns with fixed button size */
+  grid-gap: 10px; /* Add space between buttons */
+  justify-items: start; /* Center buttons horizontally */
+  grid-auto-flow: row dense;
 }
 
-
+.sequencer button {
+  width: 40px; /* Fixed button width */
+  height: 40px; /* Fixed button height */
+  margin-top: 10px;
+}
 
 .nes-btn.sequencer-btn.playing {
     color: #fff;
     background-color:#92cc41; /* light green */
   }
-
 
 .nes-btn.sequencer-btn.playing::after {
     position: absolute;
@@ -126,10 +161,6 @@
 }
 
 
-
-
-
-
 .nes-btn.sequencer-btn.is-active:hover {
   background-color: #d60303;
   }
@@ -170,18 +201,108 @@
 
 
 
-
-
-
-
-
-.nes-container {
-  padding: 20px;
-  margin: 10px 15px;
+.sample-dropdown {
+  margin-top: 10px;
 }
+
+.sample-dropdown select {
+  width: 220px;  /* Adjust the width as per your design */
+  padding: 5px;
+  font-family: 'Press Start 2P', sans-serif;
+  background-color: #f5f5f5;
+  border: 1px solid #333;
+}
+
+
+
 
 .sampleName {
   min-width: 220px;
   margin-right: 10px;
+  text-align: left;
 }
+
+
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.bpm-control,
+.step-control {
+  display: flex;
+  align-items: center;
+}
+
+.bpm-control label,
+.step-control label {
+  font-family: 'Press Start 2P', sans-serif;
+  margin-right: 10px;
+}
+
+.bpm-control input {
+  width: 200px;
+  font-size: 45px;
+}
+
+
+.bpm-control input::-webkit-inner-spin-button {
+  display: none;
+}
+
+
+header {
+  display: flex;
+  justify-content: space-between; /* Evenly distribute items */
+  align-items: center;            /* Align items vertically */
+  padding: 10px;
+  gap: 20px;                      /* Space between elements */
+  width: 100%;                    /* Full width */
+}
+
+.bpm-controls, 
+.track-controls, 
+.playback-controls ,
+.step-controls {
+  display: flex;
+  align-items: center; /* Vertically center content inside each control */
+}
+
+.playback-controls {
+  flex: 0; /* Let the width of playback controls shrink to fit its content */
+  justify-content: flex-start; /* Align playback controls to the left */
+  margin-left: 5px;
+}
+
+.bpm-controls {
+  flex: 0; /* Let the width of BPM controls shrink to fit its content */
+  margin-left: 120px; /* Add some spacing after playback */
+  justify-content: flex-end; /* Align track controls to the right */
+}
+
+.step-controls {
+  flex: 1; /* Let the width of BPM controls shrink to fit its content */
+  margin-left: 20px; /* Add some spacing after playback */
+  justify-content: flex-end; /* Align track controls to the right */
+}
+
+
+.track-controls {
+  margin-left: auto; /* Push track controls to the right */
+  flex: 2; /* Take the remaining available space */
+  justify-content: flex-end; /* Align track controls to the right */
+}
+
+
+.remove-track {
+  text-align: right;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+
+
+
 

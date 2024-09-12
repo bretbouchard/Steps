@@ -6,3 +6,8 @@ public/
 
 # Optional: Ignore other files like .env for sensitive info (if applicable)
 .env
+
+/.next
+*.gz
+/.next/cache
+*.gz
