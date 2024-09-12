@@ -1,0 +1,187 @@
+@font-face {
+    font-family: "Press Start 2P";
+    src: url("../fonts/Press_Start_2P/PressStart2P-Regular.ttf");
+}
+
+/*.harlow {
+    font-family: "Press Start 2P";
+    font-weight: 400;
+    font-style: normal;
+}*/
+
+.trackWrapper {
+  margin-bottom: 20px;
+  border: 2px solid #333;          /* Optional: to visualize the track borders */
+  padding: 10px;
+}
+
+.track {
+  display: flex;
+  justify-content: space-between;  /* Distribute the items with space between them */
+  align-items: center;             /* Vertically align all sections (samples, knobs, sequencer) in the center */
+}
+
+.samples {
+  flex: 2;                         /* Makes samples take equal space within .track */
+  display: flex;
+  justify-content: center;
+  align-items: center;             /* Center the content vertically */
+  margin-right: 20px;              /* Optional: Add space between sections */
+}
+
+.knobs {
+  flex: 1;                         /* Knobs will take twice as much space as the samples */
+  display: flex;
+  justify-content: space-around;   /* Distribute knobs evenly */
+  align-items: center;             /* Center knobs vertically */
+}
+
+
+.knob-wrapper {
+    position: relative;
+
+}
+
+.knob-wrapper label{
+/*  display: none;*/
+  position: absolute;
+  top: -25px;
+  left: 12px;
+  }
+
+.knob-wrapper {
+  text-align: center;
+  margin-right: 10px;              /* Add spacing between knobs */
+}
+
+.sequencer {
+  flex: 8;                         /* Sequencer will take more space */
+  display: flex;
+  justify-content: space-around;   /* Distribute the buttons evenly */
+  align-items: center;             /* Center sequencer buttons vertically */
+}
+
+
+
+.nes-btn.sequencer-btn.playing {
+    color: #fff;
+    background-color:#92cc41; /* light green */
+  }
+
+
+.nes-btn.sequencer-btn.playing::after {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    bottom: -4px;
+    left: -4px;
+    content: "";
+    box-shadow:inset -4px -4px 3px #4aa52e
+}
+
+.nes-btn.sequencer-btn.playing:hover  {
+    color: #fff;
+    background-color:#92cc41; /* light green */
+  }
+
+
+.nes-btn.sequencer-btn.playing:hover ::after {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    bottom: -4px;
+    left: -4px;
+    content: "";
+    box-shadow:inset -4px -4px 3px #4aa52e
+}
+
+.nes-btn.sequencer-btn.playing.is-active {
+  background-color: #cc0000;
+}
+
+.nes-btn.sequencer-btn.playing.is-active::after {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    bottom: -4px;
+    left: -4px;
+    content: "";
+    box-shadow:inset -4px -4px 3px #cc0000;
+}
+
+.nes-btn.sequencer-btn.playing.is-active:hover  {
+    color: #fff;
+    background-color:#92cc41; /* light green */
+  }
+
+
+.nes-btn.sequencer-btn.playing.is-active:hover ::after {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    bottom: -4px;
+    left: -4px;
+    content: "";
+    box-shadow:inset -4px -4px 3px #4aa52e
+}
+
+
+
+
+
+
+.nes-btn.sequencer-btn.is-active:hover {
+  background-color: #d60303;
+  }
+
+.nes-btn.sequencer-btn.is-active::after {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    bottom: -4px;
+    left: -4px;
+    content: "";
+    box-shadow:inset -4px -4px 3px #b80404
+}
+
+
+.nes-btn.sequencer-btn.is-active:hover::after {
+    box-shadow:inset -4px -4px 3px #b80404
+  }
+
+
+.nes-btn.sequencer-btn.playing:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color:#76c442;
+}
+
+.nes-btn.sequencer-btn.playing:hover::after {
+    box-shadow:inset -6px -6px #4aa52e
+}
+
+.nes-btn.sequencer-btn.playing:focus {
+    box-shadow:0 0 0 6px rgba(74, 165, 46, .3)
+}
+
+.nes-btn.sequencer-btn.playing:active:not(.is-disabled)::after {
+    box-shadow:inset 4px 4px #4aa52e
+}
+
+
+
+
+
+
+
+
+.nes-container {
+  padding: 20px;
+  margin: 10px 15px;
+}
+
+.sampleName {
+  min-width: 220px;
+  margin-right: 10px;
+}
+

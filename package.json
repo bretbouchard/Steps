@@ -1,0 +1,32 @@
+{
+  "name": "steps",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "nes.css": "^2.3.0",
+    "next": "14.2.9",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-rotary-knob": "^3.0.3",
+    "react-rotary-knob-skin-pack": "^1.0.2",
+    "reactronica": "^0.8.1-canary.0",
+    "sass": "^1.78.0",
+    "tone": "^15.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.9",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

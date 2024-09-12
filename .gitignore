@@ -1,0 +1,8 @@
+# Ignore node_modules folder
+node_modules/
+
+# Ignore the public folder (which contains .wav files)
+public/
+
+# Optional: Ignore other files like .env for sensitive info (if applicable)
+.env
