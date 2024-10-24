@@ -1,2 +1,2 @@
 # Steps
- Drum machine style sequencer
+ Drum sequencer in NES style
