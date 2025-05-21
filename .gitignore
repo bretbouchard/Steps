@@ -3,6 +3,7 @@ node_modules/
 
 # Ignore sample files but keep the structure
 public/samples/JeuneLys_Beatz/
+public/samples/sampleFiles.json
 public/samples/sampleFiles.json.tmp
 
 # Optional: Ignore other files like .env for sensitive info (if applicable)
