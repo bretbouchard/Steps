@@ -1,8 +1,9 @@
 # Ignore node_modules folder
 node_modules/
 
-# Ignore the public folder (which contains .wav files)
-public/
+# Ignore sample files but keep the structure
+public/samples/JeuneLys_Beatz/
+public/samples/sampleFiles.json.tmp
 
 # Optional: Ignore other files like .env for sensitive info (if applicable)
 .env
@@ -11,3 +12,5 @@ public/
 *.gz
 /.next/cache
 *.gz
+.DS_Store
+# src/samples/list.txt

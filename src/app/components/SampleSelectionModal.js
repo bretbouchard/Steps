@@ -85,9 +85,9 @@ const SampleSelectionModal = ({ sampleFiles, onClose, onAssign }) => {
             // Display samples in the selected section
             <div className="sample-list">
               <ul>
-                {sampleFiles[currentSection].map((sample) => (
+                {sampleFiles[currentSection].map((sample, index) => (
                   <li
-                    key={sample.name}
+                    key={`${currentSection}-${sample.name}-${index}`}
                     onClick={() => handleSampleClick(sample)}
                     className={sample === currentSample ? "highlighted" : ""}
                   >
