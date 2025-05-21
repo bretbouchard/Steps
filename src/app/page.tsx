@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Song } from "reactronica";
 import Track from "./components/Track";
 import BpmControls from "./components/BpmControls";  
@@ -8,29 +8,60 @@ import PlaybackControls from "./components/PlaybackControls";
 import StepCountControl from "./components/StepCountControl";  // Import StepCountControl
 import MidiControls from "./components/MidiControls"; // Import MidiControls
 import OscControls from "./components/OscControls"; // Import OscControls
-import LinkSyncControls from "./components/LinkSyncControls"; // Import LinkSyncControls
+import CollapsibleSection from "./components/CollapsibleSection"; // Import the Collapsible component
+// import LinkSyncControls from "./components/LinkSyncControls"; // Disabled Ableton Link functionality
 import 'nes.css/css/nes.min.css'; 
 import './css/app.css';
+import './css/Collapsible.css';
+
+// TypeScript interfaces
+interface Sample {
+  name: string;
+  path: string;
+}
+
+interface SampleCategory {
+  [category: string]: Sample[];
+}
+
+interface TrackData {
+  id: number;
+  sectionName: string;
+  sectionSamples: Sample[];
+  volume: number;
+  midiTriggerTime: number | null;
+}
+
+interface MidiOutputDevice {
+  name: string;
+  send: (data: number[]) => void;
+}
+
+interface LinkStatus {
+  isEnabled: boolean;
+  numPeers: number;
+  linkBpm: number;
+}
 
 const HomePage = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [bpm, setBpm] = useState(120);
   const [stepCount, setStepCount] = useState(16);  // Control the number of steps
-  const [tracks, setTracks] = useState([]);  // Dynamic list of tracks
+  const [tracks, setTracks] = useState<TrackData[]>([]);  // Dynamic list of tracks
   // Each track object will now also store its volume and a trigger timestamp for MIDI play
   // e.g., { id, sectionName, sectionSamples, volume, midiTriggerTime }
 
-  const [sampleFiles, setSampleFiles] = useState(null);  // State to hold the sample files
-  const [sampleFilesError, setSampleFilesError] = useState(null); // For errors related to sampleFiles.json
+  const [sampleFiles, setSampleFiles] = useState<SampleCategory | null>(null);  // State to hold the sample files
+  const [sampleFilesError, setSampleFilesError] = useState<string | null>(null); // For errors related to sampleFiles.json
   const [isLoadingSamples, setIsLoadingSamples] = useState(true); // To show loading state
-  const [selectedMidiOutputDevice, setSelectedMidiOutputDevice] = useState(null); // For MIDI output
-  const [sendOscMessageFunction, setSendOscMessageFunction] = useState(null); // For sending OSC messages
-  const [linkStatus, setLinkStatus] = useState({ isEnabled: false, numPeers: 0, linkBpm: 120 }); // For Ableton Link status
+  const [selectedMidiOutputDevice, setSelectedMidiOutputDevice] = useState<MidiOutputDevice | null>(null); // For MIDI output
+  const [sendOscMessageFunction, setSendOscMessageFunction] = useState<((data: { address: string, args?: any[] }) => void) | null>(null); // For sending OSC messages
+  const [linkStatus, setLinkStatus] = useState<LinkStatus>({ isEnabled: false, numPeers: 0, linkBpm: 120 }); // For Ableton Link status
 
   const DEFAULT_TRACK_VOLUME_DB = -6; // Default volume in dB for tracks
 
   // Function to validate the structure of sampleFiles.json
-  const validateSampleFiles = (data) => {
+  const validateSampleFiles = (data: any): string | null => {
     if (typeof data !== 'object' || data === null) {
       return "Sample library is not a valid object.";
     }
@@ -71,7 +102,7 @@ const HomePage = () => {
         }
         
         setSampleFiles(data);  // Set the loaded data in the state
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching or validating sample files:", error);
         setSampleFilesError(error.message || "An unknown error occurred while loading samples.");
         setSampleFiles(null); // Ensure no stale data is used
@@ -120,18 +151,18 @@ const HomePage = () => {
     setTracks([...tracks, newTrackData]);
   };
 
-  const removeTrack = (id) => {
+  const removeTrack = (id: number) => {
     setTracks(tracks.filter((track) => track.id !== id));
   };
 
   // Callback for MIDI Output device selection from MidiControls
-  const handleMidiOutputSelected = (device) => {
+  const handleMidiOutputSelected = (device: MidiOutputDevice | null) => {
     setSelectedMidiOutputDevice(device);
     console.log("HomePage: Selected MIDI Output Device", device ? device.name : 'None');
   };
 
   // Callback for MIDI Note On events
-  const handleMidiNoteOn = (note, velocity, channel) => {
+  const handleMidiNoteOn = (note: number, velocity: number, channel: number) => {
     console.log(`HomePage received Note On: Note ${note}, Velocity ${velocity}, Channel ${channel}`);
     // Map MIDI notes C4 (60) to D#4 (63) to tracks 0-3
     const trackIdToTrigger = note - 60;
@@ -148,7 +179,7 @@ const HomePage = () => {
   };
 
   // Callback for OSC commands from OscControls.js
-  const handleOscCommand = (command, payload) => {
+  const handleOscCommand = (command: string, payload: any) => {
     console.log(`HomePage received OSC Command: ${command}`, payload);
     switch (command) {
       case 'triggerTrack':
@@ -193,7 +224,7 @@ const HomePage = () => {
   };
 
   // Callback for MIDI Control Change events
-  const handleMidiControlChange = (controllerNumber, controllerValue, channel) => {
+  const handleMidiControlChange = (controllerNumber: number, controllerValue: number, channel: number) => {
     console.log(`HomePage received CC: Controller ${controllerNumber}, Value ${controllerValue}, Channel ${channel}`);
     // CC 7 (Main Volume) on channels 1-4 controls tracks 0-3
     if (controllerNumber === 7 && channel >= 1 && channel <= 4) {
@@ -218,7 +249,7 @@ const HomePage = () => {
   };
   
   // Function to update a specific track's volume (e.g., from Knob)
-  const updateTrackVolume = (trackId, newVolume) => {
+  const updateTrackVolume = (trackId: number, newVolume: number) => {
     setTracks(prevTracks =>
       prevTracks.map(track =>
         track.id === trackId ? { ...track, volume: newVolume } : track
@@ -227,7 +258,7 @@ const HomePage = () => {
   };
 
   // Callback for track step play events (from Track.js)
-  const handleTrackStepPlay = (trackId, step, stepIndex, sampleName) => {
+  const handleTrackStepPlay = (trackId: number, step: any, stepIndex: number, sampleName: string) => {
     // console.log(`HomePage: Track ${trackId} played step ${stepIndex} (Sample: ${sampleName})`, step);
     
     // MIDI Output
@@ -266,7 +297,7 @@ const HomePage = () => {
   };
 
   // Callback for OSC port readiness from OscControls.js
-  const handleOscPortReady = (sendFunc, status) => {
+  const handleOscPortReady = (sendFunc: any, status: string) => {
     if (status === 'connected' && sendFunc) {
       setSendOscMessageFunction(() => sendFunc); // Use functional update for stability
       console.log("HomePage: OSC Send function received and ready.");
@@ -307,7 +338,7 @@ const HomePage = () => {
   }, [bpm, sendOscMessageFunction]);
 
   // --- Ableton Link Callbacks ---
-  const handleLinkStatusChange = useCallback((status) => {
+  const handleLinkStatusChange = useCallback((status: any) => {
     console.log("HomePage: Link Status Change", status);
     setLinkStatus(prevStatus => ({ ...prevStatus, ...status }));
     if (status.isEnabled && status.linkBpm) {
@@ -318,7 +349,7 @@ const HomePage = () => {
     }
   }, [bpm]); // Added bpm to dependencies
 
-  const handleLinkTempoChange = useCallback((newLinkBpm) => {
+  const handleLinkTempoChange = useCallback((newLinkBpm: number) => {
     console.log(`HomePage: Link Tempo Changed to ${newLinkBpm}`);
     if (linkStatus.isEnabled) { // Only update app BPM if Link is enabled
         if (Math.abs(bpm - newLinkBpm) > 0.1) {
@@ -327,7 +358,7 @@ const HomePage = () => {
     }
   }, [linkStatus.isEnabled, bpm]); // Added bpm to dependencies
 
-  const handleLinkPlayStateChange = useCallback((newIsPlaying) => {
+  const handleLinkPlayStateChange = useCallback((newIsPlaying: boolean) => {
     console.log(`HomePage: Link Play State Changed to ${newIsPlaying}`);
     if (linkStatus.isEnabled) { // Only update app play state if Link is enabled
       if (isPlaying !== newIsPlaying) {
@@ -384,7 +415,7 @@ const HomePage = () => {
                 allSampleFiles={sampleFiles}
                 stepCount={stepCount}
                 volume={trackData.volume} // Pass volume from state
-                onVolumeChange={(newVolume) => updateTrackVolume(trackData.id, newVolume)} // For Knob updates
+                onVolumeChange={(newVolume: number) => updateTrackVolume(trackData.id, newVolume)} // For Knob updates
                 midiTriggerTime={trackData.midiTriggerTime} // Pass MIDI trigger time
                 onTrackStepPlay={handleTrackStepPlay} // Pass the new callback
               />
@@ -398,25 +429,29 @@ const HomePage = () => {
 
       {/* MIDI Controls Area */}
       <div className="midi-controls-area">
-        <MidiControls 
-          onNoteOn={handleMidiNoteOn}
-          onControlChange={handleMidiControlChange}
-          onMidiOutputSelected={handleMidiOutputSelected} // Pass the new callback
-          isPlaying={isPlaying} // Pass isPlaying state for MIDI Clock
-          bpm={bpm}             // Pass bpm state for MIDI Clock
-        />
+        <CollapsibleSection title="MIDI Controls" defaultCollapsed={true}>
+          <MidiControls 
+            onNoteOn={handleMidiNoteOn}
+            onControlChange={handleMidiControlChange}
+            onMidiOutputSelected={handleMidiOutputSelected} // Pass the new callback
+            isPlaying={isPlaying} // Pass isPlaying state for MIDI Clock
+            bpm={bpm}             // Pass bpm state for MIDI Clock
+          />
+        </CollapsibleSection>
       </div>
 
       {/* OSC Controls Area */}
       <div className="osc-controls-area">
-        <OscControls 
-          onOscCommand={handleOscCommand} 
-          onOscPortReady={handleOscPortReady} 
-        />
+        <CollapsibleSection title="OSC Controls" defaultCollapsed={true}>
+          <OscControls 
+            onOscCommand={handleOscCommand} 
+            onOscPortReady={handleOscPortReady} 
+          />
+        </CollapsibleSection>
       </div>
 
-      {/* Ableton Link Controls Area */}
-      <div className="link-sync-controls-area">
+      {/* Ableton Link Controls Area - disabled */}
+      {/* <div className="link-sync-controls-area">
         <LinkSyncControls
           appIsPlaying={isPlaying}
           appBpm={bpm}
@@ -424,7 +459,7 @@ const HomePage = () => {
           onLinkTempoChange={handleLinkTempoChange}
           onLinkPlayStateChange={handleLinkPlayStateChange}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

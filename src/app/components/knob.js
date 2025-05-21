@@ -1,6 +1,5 @@
 import React from 'react';
-import { Knob as RotaryKnob } from 'react-rotary-knob';
-import * as skins from 'react-rotary-knob-skin-pack';
+import SimpleKnob from './SimpleKnob';
 
 const Knob = ({ label, value, setValue, min, max }) => {
   const handleChange = (newValue) => {
@@ -9,15 +8,13 @@ const Knob = ({ label, value, setValue, min, max }) => {
 
   return (
     <div className="knob-container">
-      <label>{label}</label>
-      <RotaryKnob
+      <SimpleKnob
+        label={label}
         min={min}
         max={max}
         value={value}
-        onChange={handleChange}
-        skin={skins.s16}  
-        unlockDistance={100}  
-        style={{ width: '80px', height: '80px' }}
+        setValue={handleChange}
+        size={80}
       />
     </div>
   );

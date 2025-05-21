@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { Track as ReactronicaTrack, Instrument } from "reactronica";
-import * as skins from "react-rotary-knob-skin-pack";
-import { Knob } from "react-rotary-knob";
+// Replaced vulnerable rotary knob with our secure implementation
+import SimpleKnob from "./SimpleKnob";
 import SequencerSteps from "./SequencerSteps";
 import SampleSelectionModal from "./SampleSelectionModal";  // Modal for selecting samples
 
@@ -161,28 +161,28 @@ const Track = ({
         {/* Rotary Knobs for Volume and Pitch */}
         <div className="knobs">
           <div className="knob-wrapper">
-            <label>V</label>
-            <Knob
+            <SimpleKnob
+              label="V"
               min={-30}
               max={0}
               value={propVolume} // Use propVolume for display
-              onChange={(newVolume) => {
+              setValue={(newVolume) => {
                 if (onVolumeChange) {
                   onVolumeChange(newVolume); // Call parent handler
                 }
               }}
-              skin={skins.s16}
+              size={70}
             />
           </div>
 
           <div className="knob-wrapper">
-            <label>P</label>
-            <Knob
+            <SimpleKnob
+              label="P"
               min={-12}
               max={12}
               value={pitch} // Pitch remains internal
-              onChange={setPitch} 
-              skin={skins.s16}
+              setValue={setPitch}
+              size={70}
             />
           </div>
         </div>
