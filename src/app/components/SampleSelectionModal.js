@@ -7,10 +7,6 @@ const SampleSelectionModal = ({ sampleFiles, onClose, onAssign }) => {
   // Define the list of sections based on the sampleFiles keys
   const listSections = Object.keys(sampleFiles);
 
-  console.log( sampleFiles );
-
-  console.log( "listSections " + listSections );
-
   const [currentSection, setCurrentSection] = useState(null);  // Track the current section (null shows sections)
   const [currentSample, setCurrentSample] = useState(null);    // Track the selected sample
 
@@ -48,7 +44,7 @@ const SampleSelectionModal = ({ sampleFiles, onClose, onAssign }) => {
     <div className="modal">
       <div className="modal-content">
         {/* Top Controls */}
-        <div className="modal-header">hi
+        <div className="modal-header">
           {currentSection ? (
             <button onClick={() => setCurrentSection(null)} className="back-button">
               &lt; {/* Back button to go back to section list */}
